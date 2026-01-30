@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Выбор подарков - Список желаний</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '🎁';
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.1;
+            top: -100px;
+            right: -50px;
+            transform: rotate(15deg);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gifts-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gift-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-card.taken {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.02) 10px,
+                rgba(0,0,0,0.02) 20px
+            );
+            border-color: var(--gray);
+            opacity: 0.7;
+        }
+
+        .gift-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .gift-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .gift-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .gift-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .gift-status {
+            background: var(--danger);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .gift-description {
+            color: var(--gray);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .gift-link {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .gift-link:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .gift-link i {
+            margin-right: 8px;
+        }
+
+        .select-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #2a9d8f 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .select-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 201, 240, 0.4);
+        }
+
+        .select-btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .select-btn i {
+            font-size: 1.1rem;
+        }
+
+        .selection-form {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .gift-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gift-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .submit-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: var(--gradient);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .admin-panel {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 2px dashed var(--gray);
+        }
+
+        .admin-panel h4 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .admin-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+        }
+
+        .admin-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .admin-btn:hover {
+            opacity: 0.9;
+        }
+
+        .message {
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gift-owner {
+            font-size: 0.9rem;
+            color: var(--danger);
+            font-weight: 600;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: rgba(247, 37, 133, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .instructions {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .share-link {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .share-link input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .gifts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎁 Список подарков с OZON</h1>
+            <p>Выберите подарок, который вам нравится. После выбора он исчезнет для других участников.</p>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> Как это работает:</h3>
+            <ol>
+                <li>Посмотрите список доступных подарков ниже</li>
+                <li>Нажмите на ссылку, чтобы посмотреть подарок на OZON</li>
+                <li>Выберите понравившийся подарок через форму справа</li>
+                <li>После выбора подарок помечается как "Занят" и пропадает из доступных</li>
+                <li>Каждый может выбрать только один подарок</li>
+            </ol>
+        </div>
+
+        <div class="content">
+            <div class="gifts-section">
+                <h2 style="color: var(--primary); margin-bottom: 20px;">
+                    <i class="fas fa-gifts"></i> Доступные подарки
+                </h2>
+
+                <div id="gifts-container">
+                    <!-- Подарки загружаются динамически -->
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Загрузка списка подарков...</p>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3 id="total-gifts">10</h3>
+                        <p><i class="fas fa-gift"></i> Всего подарков</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="taken-gifts">0</h3>
+                        <p><i class="fas fa-check-circle"></i> Выбрано</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="available-gifts">10</h3>
+                        <p><i class="fas fa-clock"></i> Доступно</p>
+                    </div>
+                </div>
+
+                <div id="message" class="message"></div>
+            </div>
+
+            <div class="selection-form">
+                <h2 class="form-title"><i class="fas fa-hand-pointer"></i> Выбрать подарок</h2>
+
+                <div class="form-group">
+                    <label for="userName"><i class="fas fa-user"></i> Ваше имя:</label>
+                    <input type="text" id="userName" placeholder="Введите ваше имя" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userEmail"><i class="fas fa-envelope"></i> Ваш email (необязательно):</label>
+                    <input type="email" id="userEmail" placeholder="email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="giftSelect"><i class="fas fa-gift"></i> Выберите подарок:</label>
+                    <select id="giftSelect" class="gift-select" required>
+                        <option value="">-- Выберите подарок --</option>
+                        <!-- Опции загружаются динамически -->
+                    </select>
+                </div>
+
+                <button class="submit-btn" onclick="selectGift()">
+                    <i class="fas fa-check-circle"></i> Забронировать подарок
+                </button>
+
+                <div class="admin-panel">
+                    <h4><i class="fas fa-lock"></i> Администрирование</h4>
+                    <p style="margin-bottom: 15px; color: var(--gray); font-size: 0.9rem;">
+                        Для добавления новых подарков или сброса выбора:
+                    </p>
+
+                    <div class="admin-input">
+                        <input type="password" id="adminPassword" placeholder="Пароль администратора">
+                        <button class="admin-btn" onclick="resetAllGifts()">
+                            <i class="fas fa-redo"></i> Сбросить
+                        </button>
+                    </div>
+
+                    <div class="admin-input">
+                        <input type="text" id="newGiftUrl" placeholder="Ссылка на новый подарок">
+                        <button class="admin-btn" onclick="addNewGift()" style="background: var(--primary);">
+                            <i class="fas fa-plus"></i> Добавить
+                        </button>
+                    </div>
+                </div>
+
+                <div class="share-link">
+                    <input type="text" id="shareUrl" readonly value="https://gift-list.ru/your-list">
+                    <button class="copy-btn" onclick="copyShareLink()">
+                        <i class="fas fa-copy"></i> Копировать
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🎄 Создано для выбора подарков | Автоматическое обновление каждые 30 секунд</p>
+            <p>Для связи: support@gift-list.ru</p>
+        </footer>
+    </div>
+
+    <button class="refresh-btn" onclick="loadGifts()" title="Обновить список">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script>
+        // Имитация базы данных в localStorage
+        const STORAGE_KEY = 'giftListData_v2';
+        const ADMIN_PASSWORD = 'admin123'; // Поменяйте пароль в продакшене!
+
+        // Начальные данные
+        const initialGifts = [
+            {
+                id: 1,
+                name: "Умная колонка Яндекс Станция",
+                url: "https://ozon.ru/t/AQ12345",
+                description: "Умная колонка с голосовым помощником Алиса",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 2,
+                name: "Беспроводные наушники Sony",
+                url: "https://ozon.ru/t/BQ67890",
+                description: "Наушники с шумоподавлением и 30-часовой работой",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 3,
+                name: "Электронная книга PocketBook",
+                url: "https://ozon.ru/t/CQ54321",
+                description: "Читалка с подсветкой и защитой от воды",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 4,
+                name: "Кофемашина De'Longhi",
+                url: "https://ozon.ru/t/DQ98765",
+                description: "Автоматическая кофемашина для эспрессо",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 5,
+                name: "Набор косметики L'Oreal",
+                url: "https://ozon.ru/t/EQ13579",
+                description: "Подарочный набор люксовой косметики",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 6,
+                name: "Power Bank 20000 mAh",
+                url: "https://ozon.ru/t/FQ24680",
+                description: "Мощный внешний аккумулятор с быстрой зарядкой",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 7,
+                name: "Умные часы Samsung",
+                url: "https://ozon.ru/t/GQ11223",
+                description: "Фитнес-браслет с отслеживанием здоровья",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 8,
+                name: "Игровая консоль Nintendo",
+                url: "https://ozon.ru/t/HQ33445",
+                description: "Портативная игровая консоль с играми",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 9,
+                name: "Кухонный комбайн Philips",
+                url: "https://ozon.ru/t/IQ55667",
+                description: "Многофункциональный кухонный процессор",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            },
+            {
+                id: 10,
+                name: "Настольная игра Монополия",
+                url: "https://ozon.ru/t/JQ77889",
+                description: "Классическая игра для всей семьи",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            }
+        ];
+
+        // Инициализация данных
+        function initializeData() {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                const data = {
+                    gifts: initialGifts,
+                    selections: [],
+                    version: '2.0'
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+            loadGifts();
+        }
+
+        // Загрузка данных
+        function getData() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            return data || { gifts: [], selections: [] };
+        }
+
+        // Сохранение данных
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // Загрузка и отображение подарков
+        function loadGifts() {
+            const data = getData();
+            const gifts = data.gifts;
+            const container = document.getElementById('gifts-container');
+            const select = document.getElementById('giftSelect');
+
+            // Обновляем селект
+            select.innerHTML = '<option value="">-- Выберите подарок --</option>';
+
+            // Фильтруем только доступные подарки для выпадающего списка
+            const availableGifts = gifts.filter(g => !g.isTaken);
+
+            availableGifts.forEach(gift => {
+                const option = document.createElement('option');
+                option.value = gift.id;
+                option.textContent = `${gift.name} (${gift.description.substring(0, 30)}...)`;
+                select.appendChild(option);
+            });
+
+            // Отображаем все подарки в виде карточек
+            if (gifts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-gift"></i>
+                        <p>Подарков пока нет. Добавьте первый подарок через админ-панель!</p>
+                    </div>
+                `;
+            } else {
+                let html = '<div class="gifts-grid">';
+
+                gifts.forEach((gift, index) => {
+                    html += `
+                        <div class="gift-card ${gift.isTaken ? 'taken' : ''}">
+                            <div class="gift-number">${index + 1}</div>
+
+                            <div class="gift-header">
+                                <div class="gift-title">${gift.name}</div>
+                                ${gift.isTaken ?
+                                    `<div class="gift-status"><i class="fas fa-check"></i> Занят</div>` :
+                                    `<div class="gift-status" style="background: #4cc9f0;"><i class="fas fa-clock"></i> Доступен</div>`
+                                }
+                            </div>
+
+                            <div class="gift-description">
+                                ${gift.description}
+                            </div>
+
+                            <a href="${gift.url}" target="_blank" class="gift-link">
+                                <i class="fas fa-external-link-alt"></i> Посмотреть на OZON
+                            </a>
+
+                            <button class="select-btn" onclick="prepareSelection(${gift.id})"
+                                    ${gift.isTaken ? 'disabled' : ''}>
+                                ${gift.isTaken ?
+                                    '<i class="fas fa-lock"></i> Уже выбран' :
+                                    '<i class="fas fa-check"></i> Выбрать этот подарок'
+                                }
+                            </button>
+
+                            ${gift.isTaken ?
+                                `<div class="gift-owner">
+                                    <i class="fas fa-user"></i> Выбрал: ${gift.takenBy}
+                                    ${gift.takenAt ? ` в ${new Date(gift.takenAt).toLocaleString()}` : ''}
+                                </div>` :
+                                ''
+                            }
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                container.innerHTML = html;
+            }
+
+            // Обновляем статистику
+            updateStats();
+
+            // Обновляем ссылку для шаринга
+            updateShareLink();
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            const data = getData();
+            const gifts = data.gifts;
+
+            const total = gifts.length;
+            const taken = gifts.filter(g => g.isTaken).length;
+            const available = total - taken;
+
+            document.getElementById('total-gifts').textContent = total;
+            document.getElementById('taken-gifts').textContent = taken;
+            document.getElementById('available-gifts').textContent = available;
+        }
+
+        // Подготовка выбора
+        function prepareSelection(giftId) {
+            const select = document.getElementById('giftSelect');
+            select.value = giftId;
+            document.getElementById('userName').focus();
+
+            // Прокручиваем к форме
+            document.querySelector('.selection-form').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        // Выбор подарка
+        function selectGift() {
+            const giftId = parseInt(document.getElementById('giftSelect').value);
+            const userName = document.getElementById('userName').value.trim();
+            const userEmail = document.getElementById('userEmail').value.trim();
+
+            // Валидация
+            if (!giftId) {
+                showMessage('Выберите подарок из списка', 'error');
+                return;
+            }
+
+            if (!userName) {
+                showMessage('Введите ваше имя', 'error');
+                return;
+            }
+
+            const data = getData();
+            const gift = data.gifts.find(g => g.id === giftId);
+
+            if (!gift) {
+                showMessage('Подарок не найден', 'error');
+                return;
+            }
+
+            if (gift.isTaken) {
+                showMessage('Этот подарок уже выбран!', 'error');
+                return;
+            }
+
+            // Обновляем подарок
+            gift.isTaken = true;
+            gift.takenBy = userName;
+            gift.takenAt = new Date().toISOString();
+
+            // Добавляем в историю выборов
+            data.selections.push({
+                giftId: gift.id,
+                giftName: gift.name,
+                userName: userName,
+                userEmail: userEmail,
+                selectedAt: gift.takenAt
+            });
+
+            // Сохраняем данные
+            saveData(data);
+
+            // Показываем сообщение об успехе
+            showMessage(`🎉 Поздравляем, ${userName}! Вы выбрали "${gift.name}"`, 'success');
+
+            // Обновляем интерфейс
+            loadGifts();
+
+            // Очищаем форму
+            document.getElementById('userName').value = '';
+            document.getElementById('userEmail').value = '';
+            document.getElementById('giftSelect').value = '';
+        }
+
+        // Сброс всех выборов
+        function resetAllGifts() {
+            const password = document.getElementById('adminPassword').value;
+
+            if (password !== ADMIN_PASSWORD) {
+                showMessage('Неверный пароль администратора', 'error');
+                return;
+            }
+
+            if (!confirm('Вы уверены, что хотите сбросить ВСЕ выборы подарков? Это действие нельзя отменить.')) {
+                return;
+            }
+
+            const data = getData();
+
+            // Сбрасываем все подарки
+            data.gifts.forEach(gift => {
+                gift.isTaken = false;
+                gift.takenBy = null;
+                gift.takenAt = null;
+            });
+
+            // Очищаем историю выборов
+            data.selections = [];
+
+            // Сохраняем
+            saveData(data);
+
+            // Обновляем интерфейс
+            loadGifts();
+
+            // Очищаем пароль
+            document.getElementById('adminPassword').value = '';
+
+            showMessage('✅ Все выборы сброшены!', 'success');
+        }
+
+        // Добавление нового подарка
+        function addNewGift() {
+            const password = document.getElementById('adminPassword').value;
+            const newGiftUrl = document.getElementById('newGiftUrl').value.trim();
+
+            if (password !== ADMIN_PASSWORD) {
+                showMessage('Неверный пароль администратора', 'error');
+                return;
+            }
+
+            if (!newGiftUrl) {
+                showMessage('Введите ссылку на подарок', 'error');
+                return;
+            }
+
+            if (!newGiftUrl.includes('ozon.ru')) {
+                showMessage('Введите корректную ссылку на OZON', 'error');
+                return;
+            }
+
+            // Генерируем примерные данные
+            const data = getData();
+            const newId = data.gifts.length > 0 ?
+                Math.max(...data.gifts.map(g => g.id)) + 1 : 1;
+
+            const newGift = {
+                id: newId,
+                name: `Новый подарок #${newId}`,
+                url: newGiftUrl,
+                description: "Описание можно изменить через админ-панель",
+                isTaken: false,
+                takenBy: null,
+                takenAt: null
+            };
+
+            data.gifts.push(newGift);
+            saveData(data);
+
+            // Очищаем поля
+            document.getElementById('newGiftUrl').value = '';
+            document.getElementById('adminPassword').value = '';
+
+            // Обновляем интерфейс
+            loadGifts();
+
+            showMessage('✅ Новый подарок добавлен!', 'success');
+        }
+
+        // Показать сообщение
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+
+            // Автоскрытие для успешных сообщений
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Обновление ссылки для шаринга
+        function updateShareLink() {
+            const currentUrl = window.location.href;
+            document.getElementById('shareUrl').value = currentUrl;
+        }
+
+        // Копирование ссылки
+        function copyShareLink() {
+            const shareInput = document.getElementById('shareUrl');
+            shareInput.select();
+            shareInput.setSelectionRange(0, 99999); // Для мобильных устройств
+
+            try {
+                navigator.clipboard.writeText(shareInput.value)
+                    .then(() => {
+                        showMessage('✅ Ссылка скопирована в буфер обмена!', 'success');
+                    })
+                    .catch(err => {
+                        // Fallback для старых браузеров
+                        document.execCommand('copy');
+                        showMessage('✅ Ссылка скопирована в буфер обмена!', 'success');
+                    });
+            } catch (err) {
+                document.execCommand('copy');
+                showMessage('✅ Ссылка скопирована!', 'success');
+            }
+        }
+
+        // Автообновление каждые 30 секунд
+        function startAutoRefresh() {
+            setInterval(loadGifts, 30000); // 30 секунд
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeData();
+            startAutoRefresh();
+
+            // Устанавливаем текущий URL как ссылку для шаринга
+            updateShareLink();
+
+            // Проверяем, есть ли параметр выбора в URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const giftId = urlParams.get('select');
+
+            if (giftId) {
+                prepareSelection(parseInt(giftId));
+            }
+        });
+
+        // Сохранение данных при закрытии страницы
+        window.addEventListener('beforeunload', () => {
+            // Автосохранение не требуется для localStorage
+        });
+    </script>
+</body>
+</html>
